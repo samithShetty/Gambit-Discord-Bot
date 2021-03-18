@@ -5,16 +5,17 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait 
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
-from time import perf_counter
 import berserk
+from time import perf_counter
+import config
 
 #Bot setup
-DISCORD_TOKEN = 'Nzg0NTE0NzA0NDA4MDUxNzMz.X8qaQQ.f-KWDHxKptt7Z0RueN5sKn_EyyM'
+DISCORD_TOKEN = config.API_KEYS['DISCORD_TOKEN']
 intents = discord.Intents(messages = True, guilds = True, reactions = True, members = True, presences = True)
 bot = commands.Bot(command_prefix = "#", intents = intents)
 
 #Lichess API Client Initialization
-LICHESS_TOKEN = 'rwprJmMZROG4OJP8' #OAuth token for Lichess API access
+LICHESS_TOKEN = config.API_KEYS['LICHESS_TOKEN'] #OAuth token for Lichess API access
 session = berserk.TokenSession(LICHESS_TOKEN)
 lichess = berserk.Client(session=session)
 
@@ -55,7 +56,7 @@ TITLE_ICONS = { #Icons for chess.com titles
 
 
 #Launch WebDriver
-driver = webdriver.Firefox(firefox_binary = r'C:\Program Files\Mozilla Firefox\firefox.exe', 
+driver = webdriver.Firefox(firefox_binary = r'C:\Program Files (x86)\Mozilla Firefox\firefox.exe', 
     executable_path = r'C:\Program Files (x86)\geckodriver.exe')
 
 @bot.event
