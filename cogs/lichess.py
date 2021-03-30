@@ -80,12 +80,15 @@ class LichessCog(commands.Cog):
 
         # Update embed
         stat_embed.title = f"Stats for {username}"
-        stat_embed.set_footer(text="Response time: {time:.3} seconds".format(time=perf_counter() - start))
+        response_time = perf_counter() - start
+        stat_embed.set_footer(text="Response time: {time:.3} seconds".format(time=response_time))
 
         # Replace embed
         await loading.delete()
         await ctx.send(embed=stat_embed)
+        print("{outcome:<12} {site:>12} {user:^24}  Response time = {time:1.3}".format(outcome = 'Success', site = 'lichess', user = username, time = response_time))
 
 
 def setup(bot):
     bot.add_cog(LichessCog(bot))
+    print("Lichess Cog successfully loaded")
