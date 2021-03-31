@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
-import berserk
 import config
+import berserk
 import datetime
 from time import perf_counter
 
@@ -14,18 +14,20 @@ class LichessCog(commands.Cog):
         self.bot = bot
 
     @commands.command(aliases=['arena'])
-    @commands.has_role("Officer")
+    # @commands.has_role("Officer")
     async def create_arena(self, ctx, name, clockTime, clockIncrement, minutes, startDate, startTime):
         # Date should be entered: Year/M/D H/M
         cString = startDate + " " + startTime + ":00"
         dTime = datetime.datetime.fromisoformat(cString)
 
         # Returns an epoch timestamp, when Lichess only accepts millisecond timestamps, hence the iTime * 1000 on l.26
-        dTime = int(dTime.timestamp())
+        dTime = int(dTime.timestamp() * 1000)
         lichess.tournaments.create_arena(clockTime, clockIncrement, minutes, name=name, rated="false",
-                                         conditions="niner-chess-club", startDate=dTime)
+                                         start_date=dTime, teamId='niner-chess-club')
 
-        await ctx.send('Tournament created with name: ' + t.get_newest_arena_name())
+
+        test = lichess.tournaments.arenas_by_team('niner-chess-club')
+        await ctx.send('Tournament created with name: ' + name)
 
     @commands.command(aliases=['swiss'])
     @commands.has_role("Officer")
@@ -34,8 +36,9 @@ class LichessCog(commands.Cog):
         dTime = datetime.datetime.fromisoformat(cString)
         dTime = int(dTime.timestamp())
         clockLimit_seconds = clockLimit * 60
-        lichess.tournaments.create_swiss(clockLimit_seconds, clockIncrement, nbRounds, dTime * 1000, name=name, rated="false")
-        await ctx.send('Tournament created with name: ' + t.get_newest_swiss_name())
+        lichess.tournaments.create_swiss(clockLimit_seconds, clockIncrement, nbRounds, dTime * 1000, name=name,
+                                         rated="false")
+        await ctx.send('Tournament created with name: ' + name)
 
     @commands.command()
     async def listats(self, ctx, username):
@@ -86,7 +89,9 @@ class LichessCog(commands.Cog):
         # Replace embed
         await loading.delete()
         await ctx.send(embed=stat_embed)
-        print("{outcome:<12} {site:>12} {user:^24}  Response time = {time:1.3}".format(outcome = 'Success', site = 'lichess', user = username, time = response_time))
+        print(
+            "{outcome:<12} {site:>12} {user:^24}  Response time = {time:1.3}".format(outcome='Success', site='lichess',
+                                                                                     user=username, time=response_time))
 
 
 def setup(bot):
