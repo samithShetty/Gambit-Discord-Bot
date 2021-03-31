@@ -1,7 +1,8 @@
 import discord
 from discord.ext import commands
-import berserk
 import config
+from venv import lib
+from lib import berserk
 import datetime
 from time import perf_counter
 
@@ -21,9 +22,9 @@ class LichessCog(commands.Cog):
         dTime = datetime.datetime.fromisoformat(cString)
 
         # Returns an epoch timestamp, when Lichess only accepts millisecond timestamps, hence the iTime * 1000 on l.26
-        dTime = int(dTime.timestamp())
+        dTime = int(dTime.timestamp() * 1000)
         lichess.tournaments.create_arena(clockTime, clockIncrement, minutes, name=name, rated="false",
-                                         conditions="niner-chess-club", startDate=dTime)
+                                         start_date=dTime, teamId='niner-chess-club')
 
         await ctx.send('Tournament created with name: ' + t.get_newest_arena_name())
 
@@ -34,7 +35,8 @@ class LichessCog(commands.Cog):
         dTime = datetime.datetime.fromisoformat(cString)
         dTime = int(dTime.timestamp())
         clockLimit_seconds = clockLimit * 60
-        lichess.tournaments.create_swiss(clockLimit_seconds, clockIncrement, nbRounds, dTime * 1000, name=name, rated="false")
+        lichess.tournaments.create_swiss(clockLimit_seconds, clockIncrement, nbRounds, dTime * 1000, name=name,
+                                         rated="false")
         await ctx.send('Tournament created with name: ' + t.get_newest_swiss_name())
 
     @commands.command()
@@ -86,7 +88,9 @@ class LichessCog(commands.Cog):
         # Replace embed
         await loading.delete()
         await ctx.send(embed=stat_embed)
-        print("{outcome:<12} {site:>12} {user:^24}  Response time = {time:1.3}".format(outcome = 'Success', site = 'lichess', user = username, time = response_time))
+        print(
+            "{outcome:<12} {site:>12} {user:^24}  Response time = {time:1.3}".format(outcome='Success', site='lichess',
+                                                                                     user=username, time=response_time))
 
 
 def setup(bot):
