@@ -1,8 +1,7 @@
 import discord
 from discord.ext import commands
 import config
-from venv import lib
-from lib import berserk
+import berserk
 import datetime
 from time import perf_counter
 
@@ -15,7 +14,7 @@ class LichessCog(commands.Cog):
         self.bot = bot
 
     @commands.command(aliases=['arena'])
-    @commands.has_role("Officer")
+    # @commands.has_role("Officer")
     async def create_arena(self, ctx, name, clockTime, clockIncrement, minutes, startDate, startTime):
         # Date should be entered: Year/M/D H/M
         cString = startDate + " " + startTime + ":00"
@@ -26,7 +25,9 @@ class LichessCog(commands.Cog):
         lichess.tournaments.create_arena(clockTime, clockIncrement, minutes, name=name, rated="false",
                                          start_date=dTime, teamId='niner-chess-club')
 
-        await ctx.send('Tournament created with name: ' + t.get_newest_arena_name())
+
+        test = lichess.tournaments.arenas_by_team('niner-chess-club')
+        await ctx.send('Tournament created with name: ' + name)
 
     @commands.command(aliases=['swiss'])
     @commands.has_role("Officer")
@@ -37,7 +38,7 @@ class LichessCog(commands.Cog):
         clockLimit_seconds = clockLimit * 60
         lichess.tournaments.create_swiss(clockLimit_seconds, clockIncrement, nbRounds, dTime * 1000, name=name,
                                          rated="false")
-        await ctx.send('Tournament created with name: ' + t.get_newest_swiss_name())
+        await ctx.send('Tournament created with name: ' + name)
 
     @commands.command()
     async def listats(self, ctx, username):
