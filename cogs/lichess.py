@@ -14,7 +14,7 @@ class LichessCog(commands.Cog):
         self.bot = bot
 
     @commands.command(aliases=['arena'])
-    # @commands.has_role("Officer")
+    @commands.has_role("Officer")
     async def create_arena(self, ctx, name, clockTime, clockIncrement, minutes, startDate, startTime):
         # Date should be entered: Year/M/D H/M
         cString = startDate + " " + startTime + ":00"
