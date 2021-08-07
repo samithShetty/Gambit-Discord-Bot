@@ -1,4 +1,4 @@
 import os
 
-DISCORD_TOKEN = os.environ["DISCORD_TOKEN"],
+DISCORD_TOKEN = os.environ["DISCORD_TOKEN"]
 ADMIN_LICHESS_TOKEN = os.environ["ADMIN_LICHESS_TOKEN"]
