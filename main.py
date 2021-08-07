@@ -34,4 +34,4 @@ for filename in os.listdir('./cogs'):
         except Exception as e:
             print(f'Error loading cog {filename}:\n{e}')
 
-bot.run(config.API_KEYS['DISCORD_TOKEN'])
+bot.run(config.DISCORD_TOKEN)

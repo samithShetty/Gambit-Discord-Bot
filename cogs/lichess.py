@@ -5,7 +5,7 @@ import berserk
 import datetime
 from time import perf_counter
 
-session = berserk.TokenSession(config.API_KEYS['ADMIN_LICHESS_TOKEN'])
+session = berserk.TokenSession(config.ADMIN_LICHESS_TOKEN)
 lichess = berserk.Client(session=session)
 
 
