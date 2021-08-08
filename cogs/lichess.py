@@ -17,7 +17,7 @@ class LichessCog(commands.Cog):
     @commands.has_role("Officer")
     async def create_arena(self, ctx, name, clock_time, clock_increment, minutes, start_date, start_time):
         """
-        :note: Example command usage: #arena
+        :note: Example command usage: #arena March 10 0 60 2021-08-07 23:00
         :param ctx: command
         :param string name: arena name
         :param int clock_time: amount of clock time
@@ -94,7 +94,6 @@ class LichessCog(commands.Cog):
         gameModes = profile['perfs']
 
         # storm does not have a rating field so is removed
-        gameModes.pop('storm', None)
         for gameMode in list(gameModes.keys()):
             # Change camelCase to Space Separated
             mode = ''
@@ -103,10 +102,14 @@ class LichessCog(commands.Cog):
                     mode += ' '
                 mode += l
             mode = mode[0].upper() + mode[1:]
-
-            # Generate field using proper mode name and corresponding rating
-            rating = gameModes[gameMode]['rating']
-            stat_embed.add_field(name=mode, value=rating)
+            # Storm and Racer do not have rating fields, using score value in place
+            if mode != "Storm" and mode != "Racer":
+                # Generate field using proper mode name and corresponding rating
+                rating = gameModes[gameMode]['rating']
+                stat_embed.add_field(name=mode, value=rating)
+            else:
+                score = gameModes[gameMode]['score']
+                stat_embed.add_field(name=mode, value=score)
 
         # Update embed
         stat_embed.title = f"Stats for {username}"
