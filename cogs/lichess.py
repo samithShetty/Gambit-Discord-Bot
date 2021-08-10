@@ -183,6 +183,44 @@ class LichessCog(commands.Cog):
         # Send final embed message
         await ctx.send(embed=stat_embed)
 
+    @commands.command()
+    async def online(self, ctx):
+        """
+        :note: embed field value can hold a maximum of 1024 characters
+        :param ctx: command
+        :return: embed Discord message
+        """
+        start = perf_counter()
+
+        stat_embed = discord.Embed(
+            description='Retrieving data from lichess.org',
+            color=discord.Color.dark_blue()
+        )
+        stat_embed.set_author(name='lichess.org',
+                              icon_url='https://lichess1.org/assets/_QubGrC/logo/lichess-favicon-256.png',
+                              url=f'https://lichess.org/team/niner-chess-club')
+
+        # Send temporary Loading message
+        loading = await ctx.send(embed=stat_embed)
+
+        # Get all members from club
+        niners = lichess.teams.get_members('niner-chess-club')
+        online_members = ''
+
+        # Iterate through each member and determine if online
+        for members in niners:
+            if members['online']:
+                online_members += f'{members["username"]}\n'
+
+        stat_embed.add_field(name="Online", value=online_members, inline=True)
+        stat_embed.title = "Currently Online Members"
+        response_time = perf_counter() - start
+        stat_embed.set_footer(text="Response time: {time:.3} seconds".format(time=response_time))
+
+        # Replace embed
+        await loading.delete()
+        await ctx.send(embed=stat_embed)
+
 
 def setup(bot):
     bot.add_cog(LichessCog(bot))
