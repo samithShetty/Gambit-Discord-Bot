@@ -221,6 +221,38 @@ class LichessCog(commands.Cog):
         await loading.delete()
         await ctx.send(embed=stat_embed)
 
+    @commands.command(aliases=['flex'])
+    async def get_crosstable(self, ctx, user1, user2):
+        """
+        :param ctx: command
+        :param string user1: first user
+        :param string user2: second user
+        :return: embed Discord message
+        """
+        start = perf_counter()
+
+        stat_embed = discord.Embed(
+            description='Retrieving data from lichess.org',
+            color=discord.Color.dark_blue()
+        )
+        stat_embed.set_author(name='lichess.org',
+                              icon_url='https://lichess1.org/assets/_QubGrC/logo/lichess-favicon-256.png',
+                              url=f'https://lichess.org/team/niner-chess-club')
+
+        loading = await ctx.send(embed=stat_embed)
+
+        # Get crosstable from lichess
+        crosstable = lichess.users.get_crosstable(user1=user1, user2=user2, matchup=True)
+
+        stat_embed.add_field(name=user1.capitalize(), value=crosstable['users'][user1], inline=True)
+        stat_embed.add_field(name=user2.capitalize(), value=crosstable['users'][user2], inline=True)
+        stat_embed.title = "Head to head match up"
+        response_time = perf_counter() - start
+        stat_embed.set_footer(text="Response time: {time:.3} seconds".format(time=response_time))
+
+        await loading.delete()
+        await ctx.send(embed=stat_embed)
+
 
 def setup(bot):
     bot.add_cog(LichessCog(bot))
